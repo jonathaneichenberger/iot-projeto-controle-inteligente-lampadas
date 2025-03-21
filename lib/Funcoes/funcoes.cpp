@@ -135,17 +135,12 @@ void conectarWiFi(const char* ssid, const char* senha) {
   lcd.print("CONECTANDO     ");
   lcd.setCursor(9,1);
   lcd.print("AO         ");
-  lcd.setCursor(6,2);
-  lcd.print("WIFI...");
+  lcd.setCursor(8,2);
+  lcd.print("WIFI        ");
   delay(4000);
 
   Serial.print("Conectando ao WiFi");
   while (WiFi.status() != WL_CONNECTED) {
-    for(int index = 8; index <= 20; index++){
-      lcd.setCursor(index, 3);
-      lcd.print(".");
-      delay(200);
-    }
     Serial.print(".");
     delay(100);
   }
@@ -155,6 +150,9 @@ void conectarWiFi(const char* ssid, const char* senha) {
   }
   Serial.println();
   Serial.println("Conectado ao WiFi");
+  lcd.setCursor(5, 0);
+  lcd.print("CONECTADO      ");
+  delay(4000);
 }
 
 void enviarDadosThingSpeak(float temperatura) {
