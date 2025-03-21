@@ -15,9 +15,11 @@ void setup() {
 
 void loop() {
   static unsigned long lastUpdate = 0;      // Controle de tempo para atualização
+  static unsigned long lastUpdateTS = 0; 
   bool lcdDeveAtualizar = false;            // Flag para atualizar o LCD
   unsigned long currentMillis = millis();   // Obtém tempo atual
   float ultimaTemperatura = -999;           // variavel de controle para mudanças de temperatura
+  float temperatura;           
 
   // Verifica se houve detecção de movimento
   if (movimentoDetectado) {
@@ -52,9 +54,11 @@ void loop() {
     }
     controleLampadasPIR(); // Atualiza controle das lâmpadas
   }
+  if (currentMillis - lastUpdateTS >= 15000) {
+    lastUpdateTS = currentMillis;
+    enviarDadosThingSpeak(temperatura);
+  }
 
-
-  
   // Atualiza informações no LCD caso necessário
   if (lcdDeveAtualizar) {
     exibirNoLCD(ultimaTemperatura);
