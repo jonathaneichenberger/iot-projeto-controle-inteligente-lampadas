@@ -3,31 +3,30 @@
 #include "funcoes.h"
 
 // Interrupção acionada pelo sensor PIR
-void IRAM_ATTR detectarMovimento() {
-  movimentoDetectado = true;
+void IRAM_ATTR isMotionDetected() {
+  motionDetected = true;
 }
 
 void setup() {
   Serial.begin(115200); // Inicializa comunicação serial
-  inicializarSistema(); // Configura os sensores e dispositivos
-  attachInterrupt(digitalPinToInterrupt(PIR_PIN), detectarMovimento, RISING); // Configura interrupção do PIR
+  initializeSystem(); // Configura os sensores e dispositivos
+  attachInterrupt(digitalPinToInterrupt(PIR_PIN), isMotionDetected, RISING); // Configura interrupção do PIR
 }
 
 void loop() {
   static unsigned long lastUpdate = 0;      // Controle de tempo para atualização
   static unsigned long lastUpdateTS = 0; 
-  bool lcdDeveAtualizar = false;            // Flag para atualizar o LCD
+  bool mustUpdateLCD = false;            // Flag para atualizar o LCD
   unsigned long currentMillis = millis();   // Obtém tempo atual
-  float ultimaTemperatura = -999;           // variavel de controle para mudanças de temperatura
-  float temperatura;           
+  float lastTemperature = -999;           // variavel de controle para mudanças de temperatura           
 
   // Verifica se houve detecção de movimento
-  if (movimentoDetectado) {
+  if (motionDetected) {
     myFlag = true;
     startTime = currentMillis; 
-    movimentoDetectado = false;
+    motionDetected = false;
     Serial.println("Movimento detectado!");
-    lcdDeveAtualizar = true;
+    mustUpdateLCD = true;
   }
 
   // Verifica se o tempo limite expirou
@@ -35,32 +34,33 @@ void loop() {
     myFlag = false;
     Serial.println("Tempo expirado, desligando lâmpadas e ar condicionado.");
     startTime = 0;
-    lcdDeveAtualizar = true;
+    mustUpdateLCD = true;
   }
 
   // Atualiza temperatura a cada 1 segundo
   if (currentMillis - lastUpdate >= 1000) {
     lastUpdate = currentMillis;
-    float temperatura = dht.readTemperature();
-    if (!isnan(temperatura) && temperatura != ultimaTemperatura) {
-      ultimaTemperatura = temperatura;
+    float temperature = dht.readTemperature();
+    lastTemperature = temperature;
       if (myFlag) {
-        controleArDHT(temperatura); // Liga/desliga o NeoPixel do ar-condicionado
-      } else {
+        airControlDHT(temperature); // Liga/desliga o NeoPixel do ar-condicionado
+      } else {    if (!isnan(temperature) && temperature != lastTemperature) {
+
         stripAir.clear();
         stripAir.show();
       }
-      lcdDeveAtualizar = true;
+
+      if (currentMillis - lastUpdateTS >= 15000) {
+        lastUpdateTS = currentMillis;
+        enviarDadosThingSpeak(temperature);
+      } 
+      mustUpdateLCD = true;
     }
-    controleLampadasPIR(); // Atualiza controle das lâmpadas
-  }
-  if (currentMillis - lastUpdateTS >= 15000) {
-    lastUpdateTS = currentMillis;
-    enviarDadosThingSpeak(temperatura);
+    lmapControlPIR(); // Atualiza controle das lâmpadas
   }
 
   // Atualiza informações no LCD caso necessário
-  if (lcdDeveAtualizar) {
-    exibirNoLCD(ultimaTemperatura);
+  if (mustUpdateLCD) {
+    displayOnLCD(lastTemperature);
   }
 }

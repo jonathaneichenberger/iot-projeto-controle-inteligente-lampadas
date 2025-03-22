@@ -1,13 +1,13 @@
 #include "funcoes.h"
 
-
 // Definições das variáveis globais
-volatile bool movimentoDetectado = false;
+volatile bool motionDetected = false;
 bool myFlag = false;  
 unsigned long previousMillis = 0;
 const unsigned long interval = 5; // Intervalo de tempo entre aumentos de brilho
 unsigned long startTime = 0;
 unsigned long delayTime = 100000; // Tempo de duração da lâmpada (100 segundos)
+unsigned int counter = 1;
 
 // Variaveis para conexão com a internet
 WiFiClient client;
@@ -27,7 +27,7 @@ LiquidCrystal lcd(19, 18, 5, 21, 2, 15);
 Adafruit_NeoPixel strip(PIXEL_COUNT, LAMP_PIXEL_PIN, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripAir(PIXEL_COUNT, AIR_PIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
-void inicializarSistema() {
+void initializeSystem() {
   pinMode(PIR_PIN, INPUT);
   pinMode(DHT_PIN, INPUT);
   pinMode(LDR_PIN, INPUT);
@@ -54,12 +54,12 @@ void inicializarSistema() {
   lcd.clear();
 }
 
-void controleArDHT(float temperatura) {
-  uint32_t cor;
-  if (temperatura > 25) {            // RGB: Red, Green, Blue valor máximo 255.
-    cor = stripAir.Color(0, 0, 255); // Azul: ar-condicionado ligado no frio
-  } else if (temperatura < 20) {
-    cor = stripAir.Color(255, 0, 0); // Vermelho: ar-condicionado ligado no quente
+void airControlDHT(float temperature) {
+  uint32_t color;
+  if (temperature > 25) {            // RGB: Red, Green, Blue valor máximo 255.
+    color = stripAir.Color(0, 0, 255); // Azul: ar-condicionado ligado no frio
+  } else if (temperature < 20) {
+    color = stripAir.Color(255, 0, 0); // Vermelho: ar-condicionado ligado no quente
   } else {
     stripAir.clear();
     stripAir.show();
@@ -68,12 +68,12 @@ void controleArDHT(float temperatura) {
 
   // Acende todos os LEDs do NeoPixel do ar-condicionado
   for (int i = 0; i < PIXEL_COUNT; i++) {
-    stripAir.setPixelColor(i, cor);
+    stripAir.setPixelColor(i, color);
   }
   stripAir.show();
 }
 
-void controleLampadasPIR() {
+void lmapControlPIR() {
   int brightness;
   float lux = getLux();
 
@@ -101,10 +101,10 @@ void controleLampadasPIR() {
   }
 }
 
-void exibirNoLCD(float temperatura) {
+void displayOnLCD(float temperature) {
   lcd.setCursor(0, 0);
   lcd.print("Temp: ");
-  lcd.print(temperatura);
+  lcd.print(temperature);
   lcd.print(" C    ");  
 
   lcd.setCursor(0, 1);
@@ -117,7 +117,7 @@ void exibirNoLCD(float temperatura) {
   
   lcd.setCursor(0, 3);
   lcd.print("Ar Cond: ");
-  lcd.print((temperatura < 20 || temperatura > 25) && myFlag ? "LIGADO   " : "DESLIGADO");
+  lcd.print((temperature < 20 || temperature > 25) && myFlag ? "LIGADO   " : "DESLIGADO");
 }
 
 float getLux() {
@@ -155,13 +155,14 @@ void conectarWiFi(const char* ssid, const char* senha) {
   delay(4000);
 }
 
-void enviarDadosThingSpeak(float temperatura) {
-  ThingSpeak.setField(1, temperatura);
+void enviarDadosThingSpeak(float temperature) {
+  ThingSpeak.setField(1, temperature);
 
   // Enviar os dados
   int httpCode = ThingSpeak.writeFields(channelID, writeAPIKey);
   if (httpCode == 200) {
-    Serial.println("Dados enviados com sucesso");
+    Serial.println("Dados enviados com sucesso nº " + String(counter));
+    counter++;
   } else {
     Serial.println("Falha ao enviar dados");
   }

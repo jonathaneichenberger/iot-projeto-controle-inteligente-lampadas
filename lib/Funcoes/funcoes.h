@@ -20,17 +20,17 @@
 #define LDR_PIN 33          // Pino do sensor de luz ambiente (LDR)
 
 // Protótipos das funções
-void inicializarSistema();
+void initializeSystem();
 void conectarWiFi(const char* ssid, const char* senha);
 void inicializarThingSpeak();
-void enviarDadosThingSpeak(float temperatura);
-void controleArDHT(float temperatura);
-void controleLampadasPIR();
-void exibirNoLCD(float temperatura);
+void enviarDadosThingSpeak(float temperature);
+void airControlDHT(float temperature);
+void lmapControlPIR();
+void displayOnLCD(float temperature);
 float getLux();
 
 // Variáveis globais
-extern volatile bool movimentoDetectado;
+extern volatile bool motionDetected;
 extern bool myFlag;
 extern bool stopPixel;
 extern unsigned long startTime;
