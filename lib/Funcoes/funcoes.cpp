@@ -13,7 +13,7 @@ unsigned int counter = 1;
 WiFiClient client;
 
 const char* ssid = "Wokwi-GUEST";
-const char* senha = "";
+const char* password = "";
 unsigned long channelID = 2884497;
 const char* writeAPIKey = "H39UCHX655KFTXM6"; // Substitua pela sua chave de escrita
 
@@ -43,9 +43,9 @@ void initializeSystem() {
   stripAir.begin();
   stripAir.show(); 
 
-  conectarWiFi(ssid, senha);
+  conectWiFi(ssid, password);
 
-  inicializarThingSpeak();
+  bootThingSpeak();
 
   // Exibe mensagem inicial no LCD
   lcd.setCursor(2, 0);
@@ -73,7 +73,7 @@ void airControlDHT(float temperature) {
   stripAir.show();
 }
 
-void lmapControlPIR() {
+void lampControlPIR() {
   int brightness;
   float lux = getLux();
 
@@ -128,7 +128,7 @@ float getLux() {
   return lux;
 }
 
-void conectarWiFi(const char* ssid, const char* senha) {
+void conectWiFi(const char* ssid, const char* senha) {
   Serial.begin(115200);
   WiFi.begin(ssid, senha);
   lcd.setCursor(5, 0);
@@ -155,7 +155,7 @@ void conectarWiFi(const char* ssid, const char* senha) {
   delay(4000);
 }
 
-void enviarDadosThingSpeak(float temperature) {
+void sendDataThingSpeak(float temperature) {
   ThingSpeak.setField(1, temperature);
 
   // Enviar os dados
@@ -168,6 +168,6 @@ void enviarDadosThingSpeak(float temperature) {
   }
 }
 
-void inicializarThingSpeak() {
+void bootThingSpeak() {
   ThingSpeak.begin(client);
 }

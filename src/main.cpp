@@ -52,11 +52,11 @@ void loop() {
 
       if (currentMillis - lastUpdateTS >= 15000) {
         lastUpdateTS = currentMillis;
-        enviarDadosThingSpeak(temperature);
+        sendDataThingSpeak(temperature);
       } 
       mustUpdateLCD = true;
     }
-    lmapControlPIR(); // Atualiza controle das lâmpadas
+    lampControlPIR(); // Atualiza controle das lâmpadas
   }
 
   // Atualiza informações no LCD caso necessário

@@ -21,11 +21,11 @@
 
 // Protótipos das funções
 void initializeSystem();
-void conectarWiFi(const char* ssid, const char* senha);
-void inicializarThingSpeak();
-void enviarDadosThingSpeak(float temperature);
+void conectWiFi(const char* ssid, const char* password);
+void bootThingSpeak();
+void sendDataThingSpeak(float temperature);
 void airControlDHT(float temperature);
-void lmapControlPIR();
+void lampControlPIR();
 void displayOnLCD(float temperature);
 float getLux();
 
