@@ -122,7 +122,15 @@ Agora é só programar no arquivo **src/main.cpp** e rodar a simulação! 🚀
 
 
 <a id="tecnologias-utilizadas"></a>
-## 🛠 Tecnologias Utilizadas
-* Wokwi
-* VS Code
+## 🔧 Tecnologias Utilizadas
+
+Wokwi - Simulador de circuitos IoT
+
+VS Code - Editor de código
+
+PlatformIO - Ambiente de desenvolvimento para microcontroladores
+
+ESP32 - Microcontrolador utilizado no projeto
+
+ThingSpeak - Plataforma de análise e visualização de dados IoT
 
