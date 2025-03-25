@@ -104,21 +104,21 @@ Agora é só programar no arquivo **src/main.cpp** e rodar a simulação! 🚀
 ## ▶️ Rodando o Projeto
 
 1. **Clone este repositório pelo Git Bash**:
-   ```sh
+   ```
    git clone https://github.com/jonathaneichenberger/iot-esp32-lighting-and-temperature-control-commercial-building-project.git
-
+   ```
 2. Acesse a Pasta do Projeto pelo Git Bash:
-  ```
+   ```
    cd iot-esp32-lighting-and-temperature-control-commercial-building-project
-  ```
+   ```
 3. Abra o VS Code pelo Git Bash:
-  ```
+   ```
    code .
-  ```
+   ```
 4. Use o comando ```CTRL + '``` para abrir o terminal do VS Code e para compilar use o comando:
-  ```
+   ```
    pio run
-  ```
+   ```
 
 
 <a id="tecnologias-utilizadas"></a>
