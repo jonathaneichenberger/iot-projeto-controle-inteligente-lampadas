@@ -41,11 +41,11 @@ void loop() {
   if (currentMillis - lastUpdate >= 1000) {
     lastUpdate = currentMillis;
     float temperature = dht.readTemperature();
-    lastTemperature = temperature;
+    if (!isnan(temperature) && temperature != lastTemperature) {
+      lastTemperature = temperature;
       if (myFlag) {
         airControlDHT(temperature); // Liga/desliga o NeoPixel do ar-condicionado
-      } else {    if (!isnan(temperature) && temperature != lastTemperature) {
-
+      } else {   
         stripAir.clear();
         stripAir.show();
       }

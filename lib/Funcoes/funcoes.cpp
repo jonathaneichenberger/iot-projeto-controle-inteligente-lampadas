@@ -14,6 +14,7 @@ WiFiClient client;
 
 const char* ssid = "Wokwi-GUEST";
 const char* password = "";
+const int wifiChannel = 6;
 unsigned long channelID = 2884497;
 const char* writeAPIKey = "H39UCHX655KFTXM6"; // Substitua pela sua chave de escrita
 
@@ -43,7 +44,7 @@ void initializeSystem() {
   stripAir.begin();
   stripAir.show(); 
 
-  conectWiFi(ssid, password);
+  conectWiFi(ssid, password, wifiChannel);
 
   bootThingSpeak();
 
@@ -128,31 +129,16 @@ float getLux() {
   return lux;
 }
 
-void conectWiFi(const char* ssid, const char* senha) {
-  Serial.begin(115200);
-  WiFi.begin(ssid, senha);
-  lcd.setCursor(5, 0);
-  lcd.print("CONECTANDO     ");
-  lcd.setCursor(9,1);
-  lcd.print("AO         ");
-  lcd.setCursor(8,2);
-  lcd.print("WIFI        ");
-  delay(4000);
-
+void conectWiFi(const char* ssid, const char* senha, const int wifiChannel) {
+  
   Serial.print("Conectando ao WiFi");
+  WiFi.begin(ssid, senha, wifiChannel);
   while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(".");
     delay(100);
-  }
-
-  if (WiFi.status() == WL_CONNECTED) {
-    lcd.clear();
+    Serial.print(".");
   }
   Serial.println();
-  Serial.println("Conectado ao WiFi");
-  lcd.setCursor(5, 0);
-  lcd.print("CONECTADO      ");
-  delay(4000);
+  Serial.println("Conectado!");
 }
 
 void sendDataThingSpeak(float temperature) {

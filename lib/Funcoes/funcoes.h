@@ -21,7 +21,7 @@
 
 // Protótipos das funções
 void initializeSystem();
-void conectWiFi(const char* ssid, const char* password);
+void conectWiFi(const char* ssid, const char* password, const int wifiChannel);
 void bootThingSpeak();
 void sendDataThingSpeak(float temperature);
 void airControlDHT(float temperature);
