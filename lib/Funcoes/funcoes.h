@@ -6,7 +6,6 @@
 #include <LiquidCrystal.h>
 #include <Adafruit_NeoPixel.h>
 #include <WiFi.h>
-#include<HTTPClient.h>
 #include <ThingSpeak.h>
 
 
